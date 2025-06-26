@@ -31,6 +31,10 @@ const VehicleDataDashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
   const [data, setData] = useState({});
   const [selectedVehicle, setSelectedVehicle] = useState(null);
+  const [sortConfig, setSortConfig] = useState({
+    key: null,
+    direction: 'ascending'
+  });
 
   // Enhanced data loading function
   const loadCSVData = async () => {
@@ -67,6 +71,68 @@ const VehicleDataDashboard = () => {
   useEffect(() => {
     loadCSVData();
   }, []);
+
+  // Sorting function
+  const sortData = (vehicles) => {
+    if (!sortConfig.key) return vehicles;
+
+    return [...vehicles].sort((a, b) => {
+      const aDetails = getVehicleDetails(a.id);
+      const bDetails = getVehicleDetails(b.id);
+
+      let aValue, bValue;
+
+      switch (sortConfig.key) {
+        case 'make':
+          aValue = aDetails.make;
+          bValue = bDetails.make;
+          break;
+        case 'model':
+          aValue = aDetails.model;
+          bValue = bDetails.model;
+          break;
+        case 'year':
+          aValue = parseInt(a.year);
+          bValue = parseInt(b.year);
+          break;
+        case 'price':
+          aValue = parseFloat(a.price);
+          bValue = parseFloat(b.price);
+          break;
+        case 'mileage':
+          aValue = parseFloat(a.mileage);
+          bValue = parseFloat(b.mileage);
+          break;
+        case 'transmission':
+          aValue = aDetails.transmission;
+          bValue = bDetails.transmission;
+          break;
+        case 'fuelType':
+          aValue = aDetails.fuelType;
+          bValue = bDetails.fuelType;
+          break;
+        default:
+          aValue = a[sortConfig.key];
+          bValue = b[sortConfig.key];
+      }
+
+      if (aValue < bValue) {
+        return sortConfig.direction === 'ascending' ? -1 : 1;
+      }
+      if (aValue > bValue) {
+        return sortConfig.direction === 'ascending' ? 1 : -1;
+      }
+      return 0;
+    });
+  };
+
+  const requestSort = (key) => {
+    let direction = 'ascending';
+    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    }
+    setSortConfig({ key, direction });
+  };
 
   // Enhanced data processing functions
   const getVehicleDetails = (vehicleId) => {
@@ -125,26 +191,61 @@ const VehicleDataDashboard = () => {
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                Make
+              <th 
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100"
+                onClick={() => requestSort('make')}
+              >
+                Make {sortConfig.key === 'make' && (
+                  <span>{sortConfig.direction === 'ascending' ? '↑' : '↓'}</span>
+                )}
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                Model
+              <th 
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100"
+                onClick={() => requestSort('model')}
+              >
+                Model {sortConfig.key === 'model' && (
+                  <span>{sortConfig.direction === 'ascending' ? '↑' : '↓'}</span>
+                )}
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                Year
+              <th 
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100"
+                onClick={() => requestSort('year')}
+              >
+                Year {sortConfig.key === 'year' && (
+                  <span>{sortConfig.direction === 'ascending' ? '↑' : '↓'}</span>
+                )}
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                Price
+              <th 
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100"
+                onClick={() => requestSort('price')}
+              >
+                Price {sortConfig.key === 'price' && (
+                  <span>{sortConfig.direction === 'ascending' ? '↑' : '↓'}</span>
+                )}
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                Mileage
+              <th 
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100"
+                onClick={() => requestSort('mileage')}
+              >
+                Mileage {sortConfig.key === 'mileage' && (
+                  <span>{sortConfig.direction === 'ascending' ? '↑' : '↓'}</span>
+                )}
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                Transmission
+              <th 
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100"
+                onClick={() => requestSort('transmission')}
+              >
+                Transmission {sortConfig.key === 'transmission' && (
+                  <span>{sortConfig.direction === 'ascending' ? '↑' : '↓'}</span>
+                )}
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                Fuel Type
+              <th 
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100"
+                onClick={() => requestSort('fuelType')}
+              >
+                Fuel Type {sortConfig.key === 'fuelType' && (
+                  <span>{sortConfig.direction === 'ascending' ? '↑' : '↓'}</span>
+                )}
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                 Actions
@@ -152,7 +253,7 @@ const VehicleDataDashboard = () => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {data.vehicles?.map((vehicle, index) => {
+            {sortData(data.vehicles || [])?.map((vehicle, index) => {
               const details = getVehicleDetails(vehicle.id);
               return (
                 <tr
