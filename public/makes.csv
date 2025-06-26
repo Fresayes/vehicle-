@@ -1,0 +1,10 @@
+id,name,country_of_origin,logo_url,is_active,created_at,updated_at
+1,Audi,Germany,https://example.com/logos/audi.png,true,2025-06-17 15:18:33.000000000,2025-06-17 15:18:33.000000000
+2,BMW,Germany,https://example.com/logos/bmw.png,true,2025-06-17 15:18:33.000000000,2025-06-17 15:18:33.000000000
+6,Mercedes-Benz,Germany,https://example.com/logos/mercedes.png,true,2025-06-17 15:18:33.000000000,2025-06-17 15:18:33.000000000
+3,Ford,United States,https://example.com/logos/ford.png,true,2025-06-17 15:18:33.000000000,2025-06-17 15:18:33.000000000
+8,Honda,Japan,https://example.com/logos/honda.png,true,2025-06-17 15:18:33.000000000,2025-06-17 15:18:33.000000000
+4,Toyota,Japan,https://example.com/logos/toyota.png,true,2025-06-17 15:18:33.000000000,2025-06-17 15:18:33.000000000
+7,Vauxhall,United Kingdom,https://example.com/logos/vauxhall.png,true,2025-06-17 15:18:33.000000000,2025-06-17 15:18:33.000000000
+5,Volkswagen,Germany,https://example.com/logos/vw.png,true,2025-06-17 15:18:33.000000000,2025-06-17 15:18:33.000000000
+9,Peugeot,France,https://example.com/logos/peugeot.png,true,2025-06-17 15:18:33.000000000,2025-06-17 15:18:33.000000000

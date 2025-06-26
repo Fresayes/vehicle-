@@ -1,0 +1,11 @@
+id,name,hex_code,category,is_metallic,is_active
+1,Alpine White,#FFFFFF,false,false,true
+4,Black Sapphire,#000000,false,false,true
+8,Blue,#0000FF,false,false,true
+9,Green,#008000,false,false,true
+2,Mineral Grey,#4A4A4A,false,false,true
+7,Red,#FF0000,false,false,true
+6,Silver,#C0C0C0,false,false,true
+5,Sunset Orange,#FF4500,false,false,true
+3,Tanzanite Blue,#1A365D,false,false,true
+10,Yellow,#FFFF00,false,false,true

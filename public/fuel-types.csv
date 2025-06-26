@@ -1,0 +1,8 @@
+id,name,category,description,is_active
+2,Diesel,Diesel,,true
+5,Diesel Hybrid,Hybrid,,true
+3,Electric,Electric,,true
+7,Hydrogen,Hydrogen,,true
+1,Petrol,Petrol,,true
+4,Petrol Hybrid,Hybrid,,true
+6,Plug-in Hybrid,Hybrid,,true

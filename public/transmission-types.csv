@@ -1,0 +1,6 @@
+id,name,category,gear_count,is_active
+2,Automatic,Automatic,6,true
+4,CVT,CVT,1,true
+5,Dual-Clutch,Dual-Clutch,7,true
+1,Manual,Manual,6,true
+3,Semi-Automatic,Semi-Automatic,6,true

@@ -1,0 +1,11 @@
+id,name,category,description,is_active
+1,Air Conditioning,Comfort,\N,true
+6,Cruise Control,Comfort,\N,true
+8,Alloy Wheels,Exterior,\N,true
+10,Sunroof,Exterior,\N,true
+9,Leather Seats,Interior,\N,true
+2,ABS,Safety,\N,true
+3,Electronic Stability Program,Safety,\N,true
+7,Parking Sensors,Safety,\N,true
+5,Bluetooth Connectivity,Technology,\N,true
+4,Satellite Navigation,Technology,\N,true
