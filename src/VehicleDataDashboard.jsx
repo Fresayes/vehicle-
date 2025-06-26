@@ -662,7 +662,7 @@ const VehicleDataDashboard = () => {
       return acc;
     }, {});
 
-    return Object.entries(colorCount).map(([name, count]) => ({ name, count }));
+    return Object.entries(colorCount).map(([name, value]) => ({ name, value }));
   };
 
   const getTransmissionStats = () => {
@@ -677,40 +677,39 @@ const VehicleDataDashboard = () => {
       return acc;
     }, {});
 
-    return Object.entries(transmissionCount).map(([name, count]) => ({
+    return Object.entries(transmissionCount).map(([name, value]) => ({
       name,
-      count,
+      value,
     }));
   };
 
   const getTrimStats = () => {
-    if (!data.trims || !data.models) return [];
+    if (!data.vehicles || !data.trims) return [];
 
-    const trimsByModel = data.trims.reduce((acc, trim) => {
-      const model =
-        data.models.find((m) => m.id === trim.model_id)?.name || "Unknown";
-      if (!acc[model]) acc[model] = [];
-      acc[model].push(trim.name);
+    const trimCount = data.vehicles.reduce((acc, vehicle) => {
+      const trim =
+        data.trims.find((t) => t.id === vehicle.trim_id)?.name || "Unknown";
+      acc[trim] = (acc[trim] || 0) + 1;
       return acc;
     }, {});
 
-    return Object.entries(trimsByModel).map(([model, trims]) => ({
-      model,
-      trimCount: trims.length,
+    return Object.entries(trimCount).map(([name, value]) => ({
+      name,
+      value,
     }));
   };
 
   const getDocumentStats = () => {
-    if (!data.documents) return [];
+    if (!data.vehicleDocuments) return [];
 
-    const documentTypes = data.documents.reduce((acc, doc) => {
+    const documentTypes = data.vehicleDocuments.reduce((acc, doc) => {
       acc[doc.document_type] = (acc[doc.document_type] || 0) + 1;
       return acc;
     }, {});
 
-    return Object.entries(documentTypes).map(([type, count]) => ({
-      type,
-      count,
+    return Object.entries(documentTypes).map(([name, value]) => ({
+      name,
+      value,
     }));
   };
 
