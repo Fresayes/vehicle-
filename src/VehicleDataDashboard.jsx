@@ -380,8 +380,33 @@ const VehicleDataDashboard = () => {
 
   const renderColorsTab = () => (
     <div className="space-y-6">
+      <div className="bg-white p-6 rounded-lg shadow-lg">
+        <h3 className="text-xl font-semibold mb-4">Vehicle Colors Distribution</h3>
+        <div className="h-96">
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={getColorStats()}
+                dataKey="value"
+                nameKey="name"
+                cx="50%"
+                cy="50%"
+                outerRadius={150}
+                label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
+              >
+                {getColorStats().map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip />
+              <Legend />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
       <div className="bg-white p-6 rounded-lg shadow-lg overflow-x-auto">
-        <h3 className="text-xl font-semibold mb-4">Available Colors</h3>
+        <h3 className="text-xl font-semibold mb-4">Colors List</h3>
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
@@ -389,39 +414,20 @@ const VehicleDataDashboard = () => {
                 Color Name
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                Hex Code
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                Vehicle Count
+                Number of Vehicles
               </th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {data.colors?.map((color, index) => {
-              const vehicleCount =
-                data.vehicleColors?.filter((vc) => vc.color_id === color.id)
-                  .length || 0;
-              return (
-                <tr
-                  key={color.id}
-                  className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
-                >
-                  <td className="px-6 py-4 whitespace-nowrap">{color.name}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center space-x-2">
-                      <div
-                        className="w-6 h-6 rounded border"
-                        style={{ backgroundColor: color.hex_code }}
-                      />
-                      <span>{color.hex_code}</span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {vehicleCount}
-                  </td>
-                </tr>
-              );
-            })}
+            {getColorStats().map((color, index) => (
+              <tr
+                key={color.name}
+                className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
+              >
+                <td className="px-6 py-4 whitespace-nowrap">{color.name}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{color.value}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
@@ -430,43 +436,49 @@ const VehicleDataDashboard = () => {
 
   const renderTransmissionsTab = () => (
     <div className="space-y-6">
+      <div className="bg-white p-6 rounded-lg shadow-lg">
+        <h3 className="text-xl font-semibold mb-4">Transmission Types Distribution</h3>
+        <div className="h-96">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={getTransmissionStats()}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="value" name="Number of Vehicles" fill="#3B82F6" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
       <div className="bg-white p-6 rounded-lg shadow-lg overflow-x-auto">
-        <h3 className="text-xl font-semibold mb-4">Transmission Types</h3>
+        <h3 className="text-xl font-semibold mb-4">Transmission Types List</h3>
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                Type
+                Transmission Type
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                Description
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                Vehicle Count
+                Number of Vehicles
               </th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {data.transmissionTypes?.map((transmission, index) => {
-              const vehicleCount =
-                data.vehicles?.filter(
-                  (v) => v.transmission_type_id === transmission.id
-                ).length || 0;
-              return (
-                <tr
-                  key={transmission.id}
-                  className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
-                >
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {transmission.name}
-                  </td>
-                  <td className="px-6 py-4">{transmission.description}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {vehicleCount}
-                  </td>
-                </tr>
-              );
-            })}
+            {getTransmissionStats().map((transmission, index) => (
+              <tr
+                key={transmission.name}
+                className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
+              >
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {transmission.name}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {transmission.value}
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
@@ -475,56 +487,45 @@ const VehicleDataDashboard = () => {
 
   const renderTrimsTab = () => (
     <div className="space-y-6">
+      <div className="bg-white p-6 rounded-lg shadow-lg">
+        <h3 className="text-xl font-semibold mb-4">Vehicle Trims Distribution</h3>
+        <div className="h-96">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={getTrimStats()} layout="vertical">
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis type="number" />
+              <YAxis dataKey="name" type="category" width={150} />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="value" name="Number of Vehicles" fill="#10B981" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
       <div className="bg-white p-6 rounded-lg shadow-lg overflow-x-auto">
-        <h3 className="text-xl font-semibold mb-4">Trim Levels</h3>
+        <h3 className="text-xl font-semibold mb-4">Trims List</h3>
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                Make
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                Model
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                 Trim Name
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                Description
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                Vehicle Count
+                Number of Vehicles
               </th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {data.trims?.map((trim, index) => {
-              const model = data.models?.find((m) => m.id === trim.model_id);
-              const make = model
-                ? data.makes?.find((m) => m.id === model.make_id)
-                : null;
-              const vehicleCount =
-                data.vehicles?.filter((v) => v.trim_id === trim.id).length || 0;
-
-              return (
-                <tr
-                  key={trim.id}
-                  className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
-                >
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {make?.name || "Unknown"}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {model?.name || "Unknown"}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">{trim.name}</td>
-                  <td className="px-6 py-4">{trim.description}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {vehicleCount}
-                  </td>
-                </tr>
-              );
-            })}
+            {getTrimStats().map((trim, index) => (
+              <tr
+                key={trim.name}
+                className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
+              >
+                <td className="px-6 py-4 whitespace-nowrap">{trim.name}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{trim.value}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
@@ -533,65 +534,45 @@ const VehicleDataDashboard = () => {
 
   const renderDocumentsTab = () => (
     <div className="space-y-6">
+      <div className="bg-white p-6 rounded-lg shadow-lg">
+        <h3 className="text-xl font-semibold mb-4">Document Types Distribution</h3>
+        <div className="h-96">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={getDocumentStats()}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="value" name="Number of Documents" fill="#F59E0B" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
       <div className="bg-white p-6 rounded-lg shadow-lg overflow-x-auto">
-        <h3 className="text-xl font-semibold mb-4">Vehicle Documents</h3>
+        <h3 className="text-xl font-semibold mb-4">Documents List</h3>
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                Vehicle
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                 Document Type
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                Document Number
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                Issue Date
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                Expiry Date
+                Count
               </th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {data.vehicleDocuments?.map((doc, index) => {
-              const vehicle = data.vehicles?.find(
-                (v) => v.id === doc.vehicle_id
-              );
-              const make = vehicle
-                ? data.makes?.find((m) => m.id === vehicle.make_id)?.name
-                : "Unknown";
-              const model = vehicle
-                ? data.models?.find((m) => m.id === vehicle.model_id)?.name
-                : "Unknown";
-
-              return (
-                <tr
-                  key={`${doc.vehicle_id}-${doc.document_type}-${index}`}
-                  className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
-                >
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {vehicle
-                      ? `${make} ${model} (${vehicle.year})`
-                      : "Unknown Vehicle"}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {doc.document_type}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {doc.document_number}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {doc.issue_date}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {doc.expiry_date}
-                  </td>
-                </tr>
-              );
-            })}
+            {getDocumentStats().map((doc, index) => (
+              <tr
+                key={doc.name}
+                className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
+              >
+                <td className="px-6 py-4 whitespace-nowrap">{doc.name}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{doc.value}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
