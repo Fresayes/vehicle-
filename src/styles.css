@@ -70,6 +70,14 @@ body {
   display: flex;
 }
 
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.gap-4 {
+  gap: 1rem;
+}
+
 .space-x-4 > * + * {
   margin-left: 1rem;
 }
@@ -100,6 +108,7 @@ button {
   cursor: pointer;
   border: none;
   font-weight: 500;
+  transition: all 0.2s;
 }
 
 button:hover {
@@ -139,4 +148,86 @@ td {
 
 tr:nth-child(even) {
   background-color: #f9fafb;
+}
+
+/* Chart specific styles */
+.recharts-wrapper {
+  margin: 0 auto;
+}
+
+.h-96 {
+  height: 24rem;
+}
+
+.space-y-6 > * + * {
+  margin-top: 1.5rem;
+}
+
+/* Make charts responsive */
+.recharts-responsive-container {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Improve chart tooltips */
+.recharts-tooltip-wrapper {
+  background: white;
+  border-radius: 0.375rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Chart labels */
+.recharts-text {
+  fill: #4b5563;
+  font-size: 12px;
+}
+
+/* Legend styles */
+.recharts-legend-wrapper {
+  padding: 0.5rem;
+}
+
+.recharts-legend-item {
+  margin-right: 1rem !important;
+}
+
+/* Grid lines */
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  stroke: #e5e7eb;
+}
+
+/* Axis lines */
+.recharts-xAxis line,
+.recharts-yAxis line {
+  stroke: #d1d5db;
+}
+
+/* Make sure charts are visible in their containers */
+.bg-white {
+  position: relative;
+  z-index: 1;
+  overflow: visible !important;
+}
+
+/* Ensure proper spacing for chart containers */
+.max-w-7xl {
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Improve button styles */
+button {
+  border-radius: 0.375rem;
+  transition: all 0.2s ease-in-out;
+}
+
+button:hover {
+  transform: translateY(-1px);
+}
+
+/* Add hover effects to table rows */
+tbody tr:hover {
+  background-color: #f3f4f6;
 }

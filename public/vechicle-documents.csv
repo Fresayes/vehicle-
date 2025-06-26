@@ -1,0 +1,11 @@
+id,vehicle_id,document_type,document_url,filename,document_date,verified,created_at
+2,1,MOT Certificate,https://example.com/bmw3-mot.pdf,MOT.pdf,2023-02-01,true,2025-06-17 15:19:22.000000000
+5,1,Manual,https://example.com/bmw3-manual.pdf,Manual.pdf,2020-02-01,true,2025-06-17 15:19:22.000000000
+3,1,Service History,https://example.com/bmw3-service.pdf,Service.pdf,2023-12-01,true,2025-06-17 15:19:22.000000000
+1,1,V5C,https://example.com/bmw3-v5c.pdf,V5C.pdf,2020-02-01,true,2025-06-17 15:19:22.000000000
+4,1,Warranty,https://example.com/bmw3-warranty.pdf,Warranty.pdf,2023-02-01,true,2025-06-17 15:19:22.000000000
+7,2,MOT Certificate,https://example.com/audia4-mot.pdf,MOT.pdf,2023-07-01,true,2025-06-17 15:19:22.000000000
+10,2,Manual,https://example.com/audia4-manual.pdf,Manual.pdf,2019-07-01,true,2025-06-17 15:19:22.000000000
+8,2,Service History,https://example.com/audia4-service.pdf,Service.pdf,2023-11-01,true,2025-06-17 15:19:22.000000000
+6,2,V5C,https://example.com/audia4-v5c.pdf,V5C.pdf,2019-07-01,true,2025-06-17 15:19:22.000000000
+9,2,Warranty,https://example.com/audia4-warranty.pdf,Warranty.pdf,2023-07-01,true,2025-06-17 15:19:22.000000000

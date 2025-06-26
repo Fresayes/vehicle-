@@ -48,21 +48,24 @@ const VehicleDataDashboard = () => {
         fuelTypes: "fuel-types.csv",
         transmissionTypes: "transmission-types.csv",
         trims: "trims.csv",
-        vehicleDocuments: "vechile-documents.csv",
+        vehicleDocuments: "vehicle-documents.csv",
         vehicleColors: "vehicle-colors.csv",
         vehicleFeatures: "vehicle-features.csv",
       };
 
       const loadedData = {};
       for (const [key, filename] of Object.entries(files)) {
+        console.log(`Loading ${filename}...`);
         const response = await fetch(filename);
         const text = await response.text();
         loadedData[key] = Papa.parse(text, {
           header: true,
           skipEmptyLines: true,
         }).data;
+        console.log(`Loaded ${filename}, got ${loadedData[key].length} records`);
       }
       setData(loadedData);
+      console.log("All data loaded:", loadedData);
     } catch (error) {
       console.error("Error loading CSV data:", error);
     }
@@ -653,7 +656,10 @@ const VehicleDataDashboard = () => {
   };
 
   const getColorStats = () => {
-    if (!data.colors || !data.vehicleColors) return [];
+    if (!data.colors || !data.vehicleColors) {
+      console.log("Missing data for colors stats:", { colors: !!data.colors, vehicleColors: !!data.vehicleColors });
+      return [];
+    }
 
     const colorCount = data.vehicleColors.reduce((acc, vc) => {
       const color =
@@ -662,11 +668,16 @@ const VehicleDataDashboard = () => {
       return acc;
     }, {});
 
-    return Object.entries(colorCount).map(([name, value]) => ({ name, value }));
+    const result = Object.entries(colorCount).map(([name, value]) => ({ name, value }));
+    console.log("Color stats:", result);
+    return result;
   };
 
   const getTransmissionStats = () => {
-    if (!data.vehicles || !data.transmissionTypes) return [];
+    if (!data.vehicles || !data.transmissionTypes) {
+      console.log("Missing data for transmission stats:", { vehicles: !!data.vehicles, transmissionTypes: !!data.transmissionTypes });
+      return [];
+    }
 
     const transmissionCount = data.vehicles.reduce((acc, vehicle) => {
       const transmission =
@@ -677,14 +688,19 @@ const VehicleDataDashboard = () => {
       return acc;
     }, {});
 
-    return Object.entries(transmissionCount).map(([name, value]) => ({
+    const result = Object.entries(transmissionCount).map(([name, value]) => ({
       name,
       value,
     }));
+    console.log("Transmission stats:", result);
+    return result;
   };
 
   const getTrimStats = () => {
-    if (!data.vehicles || !data.trims) return [];
+    if (!data.vehicles || !data.trims) {
+      console.log("Missing data for trim stats:", { vehicles: !!data.vehicles, trims: !!data.trims });
+      return [];
+    }
 
     const trimCount = data.vehicles.reduce((acc, vehicle) => {
       const trim =
@@ -693,24 +709,31 @@ const VehicleDataDashboard = () => {
       return acc;
     }, {});
 
-    return Object.entries(trimCount).map(([name, value]) => ({
+    const result = Object.entries(trimCount).map(([name, value]) => ({
       name,
       value,
     }));
+    console.log("Trim stats:", result);
+    return result;
   };
 
   const getDocumentStats = () => {
-    if (!data.vehicleDocuments) return [];
+    if (!data.vehicleDocuments) {
+      console.log("Missing vehicle documents data");
+      return [];
+    }
 
     const documentTypes = data.vehicleDocuments.reduce((acc, doc) => {
       acc[doc.document_type] = (acc[doc.document_type] || 0) + 1;
       return acc;
     }, {});
 
-    return Object.entries(documentTypes).map(([name, value]) => ({
+    const result = Object.entries(documentTypes).map(([name, value]) => ({
       name,
       value,
     }));
+    console.log("Document stats:", result);
+    return result;
   };
 
   const renderOverviewTab = () => (
