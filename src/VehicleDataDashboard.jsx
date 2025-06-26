@@ -48,7 +48,7 @@ const VehicleDataDashboard = () => {
         fuelTypes: "fuel-types.csv",
         transmissionTypes: "transmission-types.csv",
         trims: "trims.csv",
-        vehicleDocuments: "vehicle-documents.csv",
+        vehicleDocuments: "vechicle-documents.csv",
         vehicleColors: "vehicle-colors.csv",
         vehicleFeatures: "vehicle-features.csv",
       };
@@ -541,10 +541,10 @@ const VehicleDataDashboard = () => {
         <h3 className="text-xl font-semibold mb-4">Document Types Distribution</h3>
         <div className="h-96">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={getDocumentStats()}>
+            <BarChart data={getDocumentStats()} layout="vertical">
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
+              <XAxis type="number" />
+              <YAxis dataKey="name" type="category" width={150} />
               <Tooltip />
               <Legend />
               <Bar dataKey="value" name="Number of Documents" fill="#F59E0B" />
@@ -564,18 +564,83 @@ const VehicleDataDashboard = () => {
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                 Count
               </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                Latest Issue Date
+              </th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {getDocumentStats().map((doc, index) => (
-              <tr
-                key={doc.name}
-                className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
-              >
-                <td className="px-6 py-4 whitespace-nowrap">{doc.name}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{doc.value}</td>
-              </tr>
-            ))}
+            {getDocumentStats().map((doc, index) => {
+              // Find the latest issue date for this document type
+              const latestDoc = data.vehicleDocuments
+                .filter(d => d.document_type === doc.name)
+                .sort((a, b) => new Date(b.issue_date) - new Date(a.issue_date))[0];
+              
+              return (
+                <tr
+                  key={doc.name}
+                  className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
+                >
+                  <td className="px-6 py-4 whitespace-nowrap">{doc.name}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{doc.value}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {latestDoc?.issue_date ? new Date(latestDoc.issue_date).toLocaleDateString() : 'N/A'}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="bg-white p-6 rounded-lg shadow-lg overflow-x-auto">
+        <h3 className="text-xl font-semibold mb-4">Recent Documents</h3>
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                Vehicle
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                Document Type
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                Issue Date
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                Expiry Date
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {data.vehicleDocuments
+              ?.sort((a, b) => new Date(b.issue_date) - new Date(a.issue_date))
+              .slice(0, 10)
+              .map((doc, index) => {
+                const vehicle = data.vehicles?.find(v => v.id === doc.vehicle_id);
+                const make = vehicle ? data.makes?.find(m => m.id === vehicle.make_id)?.name : 'Unknown';
+                const model = vehicle ? data.models?.find(m => m.id === vehicle.model_id)?.name : 'Unknown';
+                
+                return (
+                  <tr
+                    key={`${doc.vehicle_id}-${doc.document_type}-${index}`}
+                    className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
+                  >
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {vehicle ? `${make} ${model} (${vehicle.year})` : 'Unknown Vehicle'}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {doc.document_type}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {doc.issue_date ? new Date(doc.issue_date).toLocaleDateString() : 'N/A'}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {doc.expiry_date ? new Date(doc.expiry_date).toLocaleDateString() : 'N/A'}
+                    </td>
+                  </tr>
+                );
+              })}
           </tbody>
         </table>
       </div>
@@ -723,15 +788,21 @@ const VehicleDataDashboard = () => {
       return [];
     }
 
+    // Group documents by type and count them
     const documentTypes = data.vehicleDocuments.reduce((acc, doc) => {
-      acc[doc.document_type] = (acc[doc.document_type] || 0) + 1;
+      const type = doc.document_type || "Unknown";
+      acc[type] = (acc[type] || 0) + 1;
       return acc;
     }, {});
 
-    const result = Object.entries(documentTypes).map(([name, value]) => ({
-      name,
-      value,
-    }));
+    // Convert to array format needed for charts
+    const result = Object.entries(documentTypes)
+      .map(([name, value]) => ({
+        name,
+        value
+      }))
+      .sort((a, b) => b.value - a.value); // Sort by count in descending order
+
     console.log("Document stats:", result);
     return result;
   };
